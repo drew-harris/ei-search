@@ -1,4 +1,5 @@
 import { base64Encode } from "./utils";
+import { getVideosFromPlaylist } from "./youtube";
 
 async function getWordsFromVideoId(id: string) {
   const start = "\n\v" + id;
@@ -45,13 +46,14 @@ function getVideoIdFromUrl(url: string): string {
   return params.get("v")!;
 }
 
-// ---------- main ------------
+// ---------- Main ------------
 
-const id = getVideoIdFromUrl(
-  "https://www.youtube.com/watch?v=oF_M1f18lng&t=1849s"
+// const id = getVideoIdFromUrl(
+//   "https://www.youtube.com/watch?v=oF_M1f18lng&t=1849s"
+// );
+//
+// console.log(await getWordsFromVideoId(id));
+
+const result = await getVideosFromPlaylist(
+  "https://www.youtube.com/watch?v=GqShvscnBBs&list=PLy4hOlwN9C5FfB8djRUNS9VSrKvZIVwMC"
 );
-
-console.log(await getWordsFromVideoId(id));
-
-// https://www.youtube.com/watch?v=GqShvscnBBs&list=PLy4hOlwN9C5FfB8djRUNS9VSrKvZIVwMC
-// https://www.youtube.com/playlist?list=PLy4hOlwN9C5FfB8djRUNS9VSrKvZIVwMC
