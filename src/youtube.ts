@@ -1,3 +1,4 @@
+import { base64Encode, collapseWords } from "./utils";
 import { youtube_v3 } from "@googleapis/youtube";
 
 export async function getVideosFromPlaylist(url: string) {
@@ -64,4 +65,58 @@ async function getItemsForPlaylist(playlistId: string, nextPageToken?: string) {
     nextPageToken: data.nextPageToken,
     itemTotal: data.pageInfo?.totalResults,
   };
+}
+
+export async function getPlaylistInfo(url: string) {
+  const playlistUrl = new URLSearchParams(url.split("?")[1]);
+  const playlistId = playlistUrl.get("list");
+}
+
+export async function getWordsFromVideoId(id: string) {
+  const start = "\n\v" + id;
+
+  const response = await fetch(
+    "https://www.youtube.com/youtubei/v1/get_transcript?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        context: { client: { clientName: "WEB", clientVersion: "2.9999099" } },
+        params: base64Encode(start),
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  const data = (await response.json()) as any;
+  // console.log(data);
+
+  const cues: any[] =
+    data?.actions[0]?.updateEngagementPanelAction?.content?.transcriptRenderer
+      ?.body.transcriptBodyRenderer.cueGroups;
+
+  if (!cues) {
+    throw new Error("Could not get cues");
+  }
+
+  const words = cues.map((cue) => {
+    const interm = cue.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer;
+    return {
+      words: interm.cue.simpleText as string,
+      start: interm.startOffsetMs as number,
+    };
+  });
+
+  return words.filter((w) => w.words != "[Music]");
+}
+
+export function getVideoIdFromUrl(url: string): string {
+  const params = new URLSearchParams(url.split("?")[1]);
+  return params.get("v")!;
 }
