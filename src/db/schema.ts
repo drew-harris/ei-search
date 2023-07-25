@@ -8,7 +8,7 @@ export const podcast = mysqlTable("podcasts", {
   }).notNull(),
 });
 
-export type Todo = InferModel<typeof podcast>;
+export type Podcast = InferModel<typeof podcast>;
 
 export const episode = mysqlTable("episodes", {
   id: int("id").autoincrement().primaryKey(),
@@ -23,9 +23,11 @@ export const episode = mysqlTable("episodes", {
   thumbnail: varchar("thumbnail", {
     length: 255,
   }),
-  podcastId: int("podcast_id").references(() => podcast.id, {
-    onDelete: "cascade",
-  }),
+  podcastId: int("podcast_id")
+    .notNull()
+    .references(() => podcast.id, {
+      onDelete: "cascade",
+    }),
 });
 
 export type Episode = InferModel<typeof episode>;
@@ -35,13 +37,17 @@ export const moment = mysqlTable("moments", {
   content: text("content").notNull(),
   timestamp: bigint("timestamp", {
     mode: "bigint",
-  }),
-  episodeId: int("episode_id").references(() => episode.id, {
-    onDelete: "cascade",
-  }),
-  podcastId: int("podcast_id").references(() => podcast.id, {
-    onDelete: "cascade",
-  }),
+  }).notNull(),
+  episodeId: int("episode_id")
+    .notNull()
+    .references(() => episode.id, {
+      onDelete: "cascade",
+    }),
+  podcastId: int("podcast_id")
+    .notNull()
+    .references(() => podcast.id, {
+      onDelete: "cascade",
+    }),
 });
 
 export type Moment = InferModel<typeof moment>;

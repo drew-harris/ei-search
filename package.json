@@ -6,6 +6,7 @@
     "db:push": "bunx drizzle-kit push:mysql",
     "db:studio": "bunx drizzle-kit studio",
     "dev": "concurrently \"bun run --watch src/index.tsx\" \"bun run tw:dev\"",
+    "scrape": "bun ./src/scrape.ts",
     "tw": "bunx tailwindcss -i ./src/styles.css -o ./tailwind-gen/styles.css",
     "tw:dev": "bunx tailwindcss -i ./src/styles.css -o ./tailwind-gen/styles.css --watch"
   },
@@ -22,6 +23,7 @@
   },
   "dependencies": {
     "@elysiajs/html": "^0.5.2",
+    "@googleapis/youtube": "^10.0.0",
     "drizzle-orm": "^0.27.2",
     "elysia": "^0.5.22",
     "mysql2": "^3.5.2"
