@@ -1,5 +1,5 @@
-import { base64Encode, collapseWords } from "./utils";
 import { youtube_v3 } from "@googleapis/youtube";
+import { base64Encode } from "./utils";
 
 export async function getVideosFromPlaylist(url: string) {
   // Get the playlist id
@@ -58,18 +58,13 @@ async function getItemsForPlaylist(playlistId: string, nextPageToken?: string) {
   }
 
   const data =
-    (await response.json()) as youtube_v3.Schema$PlaylistListResponse;
+    (await response.json()) as youtube_v3.Schema$PlaylistItemListResponse;
 
   return {
     items: data.items,
     nextPageToken: data.nextPageToken,
     itemTotal: data.pageInfo?.totalResults,
   };
-}
-
-export async function getPlaylistInfo(url: string) {
-  const playlistUrl = new URLSearchParams(url.split("?")[1]);
-  const playlistId = playlistUrl.get("list");
 }
 
 export async function getWordsFromVideoId(id: string) {

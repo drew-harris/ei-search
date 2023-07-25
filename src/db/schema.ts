@@ -11,12 +11,7 @@ export const podcast = mysqlTable("podcasts", {
 export type Podcast = InferModel<typeof podcast>;
 
 export const episode = mysqlTable("episodes", {
-  id: int("id").autoincrement().primaryKey(),
-  videoId: varchar("video_id", {
-    length: 64,
-  })
-    .notNull()
-    .unique(),
+  id: varchar("id", { length: 255 }).unique().notNull().primaryKey(),
   title: varchar("title", {
     length: 255,
   }).notNull(),
@@ -35,10 +30,8 @@ export type Episode = InferModel<typeof episode>;
 export const moment = mysqlTable("moments", {
   id: int("id").autoincrement().primaryKey(),
   content: text("content").notNull(),
-  timestamp: bigint("timestamp", {
-    mode: "bigint",
-  }).notNull(),
-  episodeId: int("episode_id")
+  timestamp: int("timestamp").notNull(),
+  episodeId: varchar("episode_id", { length: 255 })
     .notNull()
     .references(() => episode.id, {
       onDelete: "cascade",

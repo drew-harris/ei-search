@@ -6,4 +6,4 @@ const client = mysql.createPool({
   uri: process.env.DATABASE_URL!,
 });
 
-export const db = drizzle(client, { schema, logger: true });
+export const db = drizzle(client, { schema, logger: false });
