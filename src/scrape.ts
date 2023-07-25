@@ -37,7 +37,7 @@ for (const video of videos) {
       podcastId: ei.id,
       content: w.words,
       episodeId: vidId,
-      timestamp: w.start / 1000,
+      timestamp: Math.round(w.start / 1000),
     }));
     await db.insert(episode).values({
       id: vidId,
