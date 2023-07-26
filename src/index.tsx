@@ -11,7 +11,7 @@ import { posthog } from "./posthog";
 
 const ResultContainer = ({ children }: Attributes) => {
   return (
-    <div id="results" class="flex flex-col my-8 gap-2">
+    <div id="results" class="flex flex-col my-8 gap-3">
       {children}
     </div>
   );
@@ -25,16 +25,25 @@ const app = new Elysia()
         <body class="m-5">
           <Header />
           <div class="flex m-2 flex-col items-center">
-            <input
-              name="q"
-              class="p-3 w-full md:w-[300px] rounded-md"
-              hx-get="/search"
-              type="search"
-              hx-swap="outerHTML"
-              hx-trigger="keyup changed delay:300ms, search"
-              hx-target="#results"
-              placeholder="Search your favorite moments here..."
-            />
+            <div class="flex bg-white px-3 w-full border border-black md:w-[300px] rounded-md">
+              <input
+                name="q"
+                class="p-3 flex-grow outline-none "
+                hx-get="/search"
+                hx-swap="outerHTML"
+                hx-trigger="keyup changed delay:300ms, search"
+                hx-target="#results"
+                placeholder="Search your favorite moments here..."
+                hx-indicator=".htmx-indicator"
+              ></input>
+
+              <img
+                src="/spinner"
+                width="18"
+                height="18"
+                class="htmx-indicator"
+              />
+            </div>
             <ResultContainer />
           </div>
         </body>
@@ -73,6 +82,7 @@ const app = new Elysia()
     );
   })
   .get("/styles.css", () => Bun.file("./tailwind-gen/styles.css"))
+  .get("/spinner", () => Bun.file("./90-ring.svg"))
   .listen(3000);
 
 console.log(

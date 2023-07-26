@@ -21,7 +21,7 @@ const videos = await getVideosFromPlaylist(
 );
 
 for (const video of videos) {
-  const title = video.snippet?.title?.split(" - ").at(1);
+  const title = video.snippet?.title?.split(" - ").slice(1).join(" ");
   const vidId = video.contentDetails?.videoId;
 
   if (!title || !video.id || !vidId) {
@@ -52,4 +52,4 @@ for (const video of videos) {
   }
 }
 
-process.exit(1);
+process.exit(0);
