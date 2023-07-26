@@ -24,14 +24,7 @@ COPY --link bun.lockb package.json ./
 RUN bun install --ci
 
 # Copy application code
-COPY --link . .
-
-
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
+COPY . .
 
 RUN bun tw
 
