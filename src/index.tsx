@@ -44,44 +44,50 @@ const app = new Elysia()
     )
   )
   .get("/search", async ({ query }) => {
-    if (typeof query.q != "string" || !query.q) {
-      return <ResultContainer></ResultContainer>;
+    try {
+      if (typeof query.q != "string" || !query.q) {
+        return <ResultContainer></ResultContainer>;
+      }
+
+      console.log("QUERY: ", query.q);
+      postHog.capture({
+        event: "server-search",
+        distinctId: "none",
+        properties: {
+          query: query.q,
+        },
+        timestamp: new Date(),
+      });
+
+      const result = await db
+        .select()
+        .from(moment)
+        .where(
+          sql`MATCH (content) AGAINST (${query.q} IN NATURAL LANGUAGE MODE)`
+        )
+        .limit(10)
+        .innerJoin(episode, eq(moment.episodeId, episode.id));
+
+      if (result.length === 0) {
+        return <ResultContainer>no results :(</ResultContainer>;
+      }
+
+      return (
+        <ResultContainer>
+          {result
+            .map((res) => (
+              <Moment
+                query={query.q as string}
+                moment={res.moments}
+                episode={res.episodes}
+              ></Moment>
+            ))
+            .join(" ")}
+        </ResultContainer>
+      );
+    } catch (e) {
+      console.error(e);
     }
-
-    console.log("QUERY: ", query.q);
-    postHog.capture({
-      event: "server-search",
-      distinctId: "none",
-      properties: {
-        query: query.q,
-      },
-      timestamp: new Date(),
-    });
-
-    const result = await db
-      .select()
-      .from(moment)
-      .where(sql`MATCH (content) AGAINST (${query.q} IN NATURAL LANGUAGE MODE)`)
-      .limit(10)
-      .innerJoin(episode, eq(moment.episodeId, episode.id));
-
-    if (result.length === 0) {
-      return <ResultContainer>no results :(</ResultContainer>;
-    }
-
-    return (
-      <ResultContainer>
-        {result
-          .map((res) => (
-            <Moment
-              query={query.q as string}
-              moment={res.moments}
-              episode={res.episodes}
-            ></Moment>
-          ))
-          .join(" ")}
-      </ResultContainer>
-    );
   })
   .get("/styles.css", () => Bun.file("./tailwind-gen/styles.css"))
   .get("/spinner", () => Bun.file("./90-ring.svg"))
