@@ -23,14 +23,14 @@ export default function Moment({
           <details>
             <summary class="my-2 cursor-pointer text-lg">Open video</summary>
             <center>
-              {/* <iframe */}
-              {/*   class="rounded-md md:w-[560px] md:h-[315px]" */}
-              {/*   src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`} */}
-              {/*   title="YouTube video player" */}
-              {/*   frameborder="0" */}
-              {/*   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" */}
-              {/*   allowfullscreen */}
-              {/* ></iframe> */}
+              <iframe
+                class="rounded-md md:w-[560px] md:h-[315px]"
+                src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`}
+                title="YouTube video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
             </center>
           </details>
         </div>

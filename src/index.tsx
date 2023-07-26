@@ -55,7 +55,7 @@ const app = new Elysia()
       .innerJoin(episode, eq(moment.episodeId, episode.id));
 
     if (result.length === 0) {
-      return <div class="mt-8">no results :(</div>;
+      return <ResultContainer>no results :(</ResultContainer>;
     }
 
     return (
