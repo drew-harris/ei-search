@@ -7,7 +7,7 @@ import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { db } from "./db";
 import { episode, moment } from "./db/schema";
-import { postHog, posthogScript } from "./posthog";
+import { posthogScript } from "./posthog";
 
 const app = new Elysia()
   .use(html())
@@ -50,14 +50,6 @@ const app = new Elysia()
       }
 
       console.log("QUERY: ", query.q);
-      postHog.capture({
-        event: "server-search",
-        distinctId: "none",
-        properties: {
-          query: query.q,
-        },
-        timestamp: new Date(),
-      });
 
       const result = await db
         .select()
