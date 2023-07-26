@@ -29,8 +29,9 @@ const app = new Elysia()
               name="q"
               class="p-3 w-full md:w-[300px] rounded-md"
               hx-get="/search"
+              type="search"
               hx-swap="outerHTML"
-              hx-trigger="keyup changed delay:300ms"
+              hx-trigger="keyup changed delay:300ms, search"
               hx-target="#results"
               placeholder="Search your favorite moments here..."
             />
@@ -52,6 +53,10 @@ const app = new Elysia()
       .where(sql`MATCH (content) AGAINST (${query.q} IN NATURAL LANGUAGE MODE)`)
       .limit(10)
       .innerJoin(episode, eq(moment.episodeId, episode.id));
+
+    if (result.length === 0) {
+      return <div class="mt-8">no results :(</div>;
+    }
 
     return (
       <ResultContainer>

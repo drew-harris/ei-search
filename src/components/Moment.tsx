@@ -13,22 +13,24 @@ export default function Moment({
     <div class="text-center rounded-md bg-white p-2">
       <div class="flex flex-col md:flex-row items-center md:items-start  gap-4">
         {episode.thumbnail && (
-          <img class="rounded-md w-44" src={episode.thumbnail} />
+          <img class="rounded-md w-48" src={episode.thumbnail} />
         )}
         <div class="w-full">
           <div class="text-xl mb-2 font-bold">{episode.title}</div>
-          <CaptionHighlight content={moment.content} query={query} />
+          <div>
+            <CaptionHighlight content={moment.content} query={query} />
+          </div>
           <details>
             <summary class="my-2 cursor-pointer text-lg">Open video</summary>
             <center>
-              <iframe
-                class="rounded-md md:w-[560px] md:h-[315px]"
-                src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`}
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
+              {/* <iframe */}
+              {/*   class="rounded-md md:w-[560px] md:h-[315px]" */}
+              {/*   src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`} */}
+              {/*   title="YouTube video player" */}
+              {/*   frameborder="0" */}
+              {/*   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" */}
+              {/*   allowfullscreen */}
+              {/* ></iframe> */}
             </center>
           </details>
         </div>
@@ -44,21 +46,23 @@ interface CaptionHighlightProps {
 
 function CaptionHighlight({ content, query }: CaptionHighlightProps) {
   if (!query) {
-    return <div>"{content}"</div>;
+    return <div>{content}</div>;
   }
   if (!content.toLowerCase().includes(query.toLowerCase())) {
-    return <div>"{content}"</div>;
+    return <div>{content}</div>;
   } else {
     return (
       <div class="">
+        <span class="mx-0">"...</span>
         {content.split(query).map((part, i) => (
-          <span>
+          <span class="mx-0">
             {part}
             {i != content.split(query).length - 1 && (
               <span class="bg-yellow-200">{query}</span>
             )}
           </span>
         ))}
+        ..."
       </div>
     );
   }
