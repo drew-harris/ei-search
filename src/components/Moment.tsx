@@ -22,7 +22,7 @@ export default function Moment({
           </div>
           <details>
             <summary class="my-2 cursor-pointer text-lg">
-              Open Quote In Video
+              View Quote In Video
             </summary>
             <center>
               <iframe

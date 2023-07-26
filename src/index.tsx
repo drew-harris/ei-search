@@ -2,20 +2,12 @@ import { html } from "@elysiajs/html";
 import { eq, sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 import * as elements from "typed-html";
-import { Attributes } from "typed-html";
 import Header from "./components/Header";
 import Moment from "./components/Moment";
+import { ResultContainer } from "./components/ResultContainer";
 import { db } from "./db";
 import { episode, moment } from "./db/schema";
-import { posthog } from "./posthog";
-
-const ResultContainer = ({ children }: Attributes) => {
-  return (
-    <div id="results" class="flex flex-col my-8 gap-3">
-      {children}
-    </div>
-  );
-};
+import { postHog, posthogScript } from "./posthog";
 
 const app = new Elysia()
   .use(html())
@@ -28,7 +20,8 @@ const app = new Elysia()
             <div class="flex bg-white px-3 w-full border border-black md:w-[300px] rounded-md">
               <input
                 name="q"
-                class="p-3 flex-grow outline-none "
+                class="py-2 flex-grow outline-none "
+                _="on htmx:afterRequest call posthog.capture('search')"
                 hx-get="/search"
                 hx-swap="outerHTML"
                 hx-trigger="keyup changed delay:300ms, search"
@@ -54,7 +47,16 @@ const app = new Elysia()
     if (typeof query.q != "string" || !query.q) {
       return <ResultContainer></ResultContainer>;
     }
+
     console.log("QUERY: ", query.q);
+    postHog.capture({
+      event: "server-search",
+      distinctId: "none",
+      properties: {
+        query: query.q,
+      },
+      timestamp: new Date(),
+    });
 
     const result = await db
       .select()
@@ -95,11 +97,11 @@ const BaseHtml = ({ children }: elements.Children) => `
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Podcast Search</title>
+  <title>Emergency Intercom Search</title>
   <script src="https://unpkg.com/htmx.org@1.9.3"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
   <link href="/styles.css" rel="stylesheet">
-  ${posthog}
+  ${posthogScript}
 </head>
 
 ${children}
