@@ -57,7 +57,7 @@ const app = new Elysia()
         .where(
           sql`MATCH (content) AGAINST (${query.q} IN NATURAL LANGUAGE MODE)`
         )
-        .limit(10)
+        .limit(20)
         .innerJoin(episode, eq(moment.episodeId, episode.id));
 
       if (result.length === 0) {
