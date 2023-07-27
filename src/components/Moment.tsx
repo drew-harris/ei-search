@@ -56,10 +56,12 @@ function CaptionHighlight({ content, query }: CaptionHighlightProps) {
     return (
       <div class="content">
         "...
-        {content.replaceAll(
-          query.toLowerCase(),
-          `<mark>${query.toLowerCase()}</mark>`
-        )}
+        {content
+          .replaceAll(
+            query.toLowerCase(),
+            `<mark>${query.toLowerCase()}</mark>`
+          )
+          .replaceAll(query, `<mark>${query}</mark>`)}
         ..."
       </div>
     );
