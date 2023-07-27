@@ -1,5 +1,11 @@
 import { InferModel } from "drizzle-orm";
-import { int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core";
+import {
+  datetime,
+  int,
+  mysqlTable,
+  text,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 export const podcast = mysqlTable("podcasts", {
   id: int("id").autoincrement().primaryKey(),
@@ -44,3 +50,11 @@ export const moment = mysqlTable("moments", {
 });
 
 export type Moment = InferModel<typeof moment>;
+
+export const feedback = mysqlTable("feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  content: text("content").notNull(),
+  submittedAt: datetime("submitted_at").notNull(),
+});
+
+export type Feedback = InferModel<typeof feedback>;
