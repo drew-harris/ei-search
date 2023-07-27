@@ -17,7 +17,7 @@ const app = new Elysia()
         <body class="m-5">
           <Header />
           <div class="flex m-2 flex-col items-center">
-            <div class="flex bg-white px-3 w-full border border-black md:w-[300px] rounded-md">
+            <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
               <input
                 name="q"
                 class="py-2 flex-grow outline-none "
