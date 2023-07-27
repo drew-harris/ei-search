@@ -51,7 +51,7 @@ const app = new Elysia()
 
       console.log("QUERY: ", query.q);
 
-      const result = await db
+      let result = await db
         .select()
         .from(moment)
         .where(
@@ -59,6 +59,18 @@ const app = new Elysia()
         )
         .limit(50)
         .innerJoin(episode, eq(moment.episodeId, episode.id));
+
+      let queryString = query.q;
+      // if content contains query, move it to the front
+      let queryInContent = result.filter((res) =>
+        res.moments.content.toLowerCase().includes(queryString.toLowerCase())
+      );
+      let queryNotInContent = result.filter(
+        (res) =>
+          !res.moments.content.toLowerCase().includes(queryString.toLowerCase())
+      );
+
+      result = [...queryInContent, ...queryNotInContent];
 
       if (result.length === 0) {
         return <ResultContainer>no results :(</ResultContainer>;
