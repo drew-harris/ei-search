@@ -31,7 +31,7 @@ for (const video of videos) {
 
   try {
     let words = await getWordsFromVideoId(vidId);
-    words = collapseWords(words, 10);
+    words = collapseWords(words, 7);
 
     const moments = words.map((w) => ({
       podcastId: ei.id,
@@ -47,6 +47,7 @@ for (const video of videos) {
     });
     await db.insert(moment).values([...moments]);
   } catch (error) {
+    console.log("Could not get quotes for ", video);
     console.error(error);
     continue;
   }
