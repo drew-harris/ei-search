@@ -1,5 +1,5 @@
 import { InferModel } from "drizzle-orm";
-import { bigint, int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core";
+import { int, mysqlTable, text, varchar } from "drizzle-orm/mysql-core";
 
 export const podcast = mysqlTable("podcasts", {
   id: int("id").autoincrement().primaryKey(),

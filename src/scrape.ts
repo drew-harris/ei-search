@@ -31,7 +31,7 @@ for (const video of videos) {
 
   try {
     let words = await getWordsFromVideoId(vidId);
-    words = collapseWords(words, 5);
+    words = collapseWords(words, 10);
 
     const moments = words.map((w) => ({
       podcastId: ei.id,
@@ -53,3 +53,4 @@ for (const video of videos) {
 }
 
 process.exit(0);
+export { getWordsFromVideoId };
