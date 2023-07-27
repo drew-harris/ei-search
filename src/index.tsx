@@ -21,7 +21,8 @@ const app = new Elysia()
               <input
                 name="q"
                 class="py-2 flex-grow outline-none "
-                _="on htmx:afterRequest call posthog.capture('search')"
+                id="search"
+                _="on htmx:afterRequest call posthog.capture('search', {query: document.getElementById('search').value})"
                 hx-get="/search"
                 hx-swap="outerHTML"
                 hx-trigger="keyup changed delay:300ms, search"
