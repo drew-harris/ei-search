@@ -1,4 +1,3 @@
-import * as elements from "typed-html";
 import { Attributes } from "typed-html";
 
 export const ResultContainer = ({ children }: Attributes) => {

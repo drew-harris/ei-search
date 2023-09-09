@@ -15,17 +15,16 @@
     "bun-types": "latest",
     "concurrently": "^8.2.0",
     "drizzle-kit": "^0.19.6",
-    "tailwindcss": "^3.3.3",
-    "typed-html": "^3.0.1"
+    "tailwindcss": "^3.3.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@elysiajs/html": "^0.5.2",
+    "@elysiajs/html": "^",
     "@googleapis/youtube": "^10.0.0",
     "drizzle-orm": "^0.27.2",
-    "elysia": "^0.5.22",
+    "elysia": "^",
     "mysql2": "^3.5.2"
   }
 }
