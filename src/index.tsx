@@ -10,32 +10,40 @@ import { posthogScript } from "./posthog";
 
 const app = new Elysia()
   .use(html())
-  .get("/", ({ html }) => (
-    <BaseHtml>
-      <body class="m-5">
-        <Header />
-        <div class="flex m-2 flex-col items-center">
-          <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
-            <input
-              name="q"
-              class="py-2 flex-grow outline-none "
-              id="search"
-              _="on htmx:afterRequest call posthog.capture('search', {query: document.getElementById('search').value})"
-              hx-get="/search"
-              hx-swap="outerHTML"
-              hx-trigger="keyup changed delay:500ms, search"
-              hx-target="#results"
-              placeholder="Search your favorite moments here..."
-              hx-indicator=".htmx-indicator"
-            ></input>
+  .get("/", ({ html, set }) => {
+    set.headers["Cache-Control"] = "public, max-age=604800, immutable";
+    return (
+      <BaseHtml>
+        <body class="m-5">
+          <Header />
+          <div class="flex m-2 flex-col items-center">
+            <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
+              <input
+                name="q"
+                class="py-2 flex-grow outline-none "
+                id="search"
+                _="on htmx:afterRequest call posthog.capture('search', {query: document.getElementById('search').value})"
+                hx-get="/search"
+                hx-swap="outerHTML"
+                hx-trigger="keyup changed delay:500ms, search"
+                hx-target="#results"
+                placeholder="Search your favorite moments here..."
+                hx-indicator=".htmx-indicator"
+              ></input>
 
-            <img src="/spinner" width="18" height="18" class="htmx-indicator" />
+              <img
+                src="/spinner"
+                width="18"
+                height="18"
+                class="htmx-indicator"
+              />
+            </div>
+            <ResultContainer />
           </div>
-          <ResultContainer />
-        </div>
-      </body>
-    </BaseHtml>
-  ))
+        </body>
+      </BaseHtml>
+    );
+  })
   .get("/search", async ({ query }) => {
     try {
       if (typeof query.q != "string" || !query.q) {
@@ -86,8 +94,14 @@ const app = new Elysia()
       console.error(e);
     }
   })
-  .get("/styles.css", () => Bun.file("./tailwind-gen/styles.css"))
-  .get("/spinner", () => Bun.file("./90-ring.svg"))
+  .get("/styles.css", ({ set }) => {
+    set.headers["Cache-Control"] = "public, max-age=31536000, immutable";
+    Bun.file("./tailwind-gen/styles.css");
+  })
+  .get("/spinner", ({ set }) => {
+    set.headers["Cache-Control"] = "public, max-age=31536000, immutable";
+    Bun.file("./90-ring.svg");
+  })
   .listen(3000);
 
 console.log(
