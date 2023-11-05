@@ -25,6 +25,7 @@ export default function Moment({
             </summary>
             <center>
               <iframe
+                loading="lazy"
                 class="rounded-md md:w-[560px] md:h-[315px]"
                 src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`}
                 title="YouTube video player"
