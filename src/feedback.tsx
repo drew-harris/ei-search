@@ -34,7 +34,7 @@ export const feedback = new Elysia()
               class="flex bg-white p-3 border border-black md:w-[50%] w-[90%] rounded-md"
             ></textarea>
             <button
-              class="pt-5 disabled:text-black/50 font-semibold"
+              class="mt-5 disabled:text-black/50 font-semibold"
               role="submit"
             >
               Submit
