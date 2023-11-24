@@ -1,7 +1,7 @@
 export default function Header() {
   return (
     <div>
-      <div class="text-center md:text-3xl text-xl font-bold">
+      <div class="text-center mt-5 md:text-3xl text-xl font-bold">
         Emergency Intercom Search Tool!
       </div>
       <div class="text-center my-2 text-black/80 max-w-[500px] m-auto">

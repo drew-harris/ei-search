@@ -51,10 +51,10 @@ export const moment = mysqlTable("moments", {
 
 export type Moment = InferModel<typeof moment>;
 
-export const feedback = mysqlTable("feedback", {
+export const feedbackTable = mysqlTable("feedback", {
   id: int("id").autoincrement().primaryKey(),
   content: text("content").notNull(),
   submittedAt: datetime("submitted_at").notNull(),
 });
 
-export type Feedback = InferModel<typeof feedback>;
+export type Feedback = InferModel<typeof feedbackTable>;

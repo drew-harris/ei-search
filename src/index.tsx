@@ -7,14 +7,22 @@ import { ResultContainer } from "./components/ResultContainer";
 import { db } from "./db";
 import { episode, moment } from "./db/schema";
 import { posthogScript } from "./posthog";
+import { feedback } from "./feedback";
 
 const app = new Elysia()
   .use(html())
+  .use(feedback)
   .get("/", ({ set }) => {
     set.headers["Cache-Control"] = "public, max-age=86400";
     return (
       <BaseHtml>
-        <body class="m-5">
+        <body class="m-3 relative">
+          <a
+            href="/feedback"
+            class="cursor-pointer text-black/50 md:text-black mb-8 hover:underline text-right"
+          >
+            Submit Feedback
+          </a>
           <Header />
           <div class="flex m-2 flex-col items-center">
             <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
@@ -23,14 +31,13 @@ const app = new Elysia()
                 class="py-2 flex-grow outline-none "
                 id="search"
                 _="on htmx:afterRequest call posthog.capture('search', {query: document.getElementById('search').value})"
-                hx-get="/search"
+                hx-get="/hx/search"
                 hx-swap="outerHTML"
                 hx-trigger="keyup changed delay:500ms, search"
                 hx-target="#results"
                 placeholder="Search your favorite moments here..."
                 hx-indicator=".htmx-indicator"
               ></input>
-
               <img
                 src="/spinner"
                 width="18"
@@ -44,7 +51,7 @@ const app = new Elysia()
       </BaseHtml>
     );
   })
-  .get("/search", async ({ query }) => {
+  .get("/hx/search", async ({ query }) => {
     try {
       if (typeof query.q != "string" || !query.q) {
         return <ResultContainer></ResultContainer>;
@@ -108,7 +115,7 @@ console.log(
   `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
 );
 
-const BaseHtml = ({ children }: JSX.BaseIntrinsicElements) => `
+export const BaseHtml = ({ children }: any) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,3 +130,5 @@ const BaseHtml = ({ children }: JSX.BaseIntrinsicElements) => `
 
 ${children}
 `;
+
+export type App = typeof app;
