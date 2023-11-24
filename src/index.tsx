@@ -16,8 +16,9 @@ const app = new Elysia()
     set.headers["Cache-Control"] = "public, max-age=86400";
     return (
       <BaseHtml>
-        <body class="m-3 relative">
+        <body hx-ext="preload" hx-boost="true" class="m-3 relative">
           <a
+            preload="mouseover"
             href="/feedback"
             class="cursor-pointer text-black/50 md:text-black mb-8 hover:underline text-right"
           >
@@ -124,6 +125,7 @@ export const BaseHtml = ({ children }: any) => `
   <title>Emergency Intercom Search</title>
   <script src="https://unpkg.com/htmx.org@1.9.3"></script>
   <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/preload.js"></script>
   <link href="/styles.css" rel="stylesheet">
   ${posthogScript}
 </head>

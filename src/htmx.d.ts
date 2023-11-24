@@ -54,5 +54,6 @@ declare namespace JSX {
     ["hx-delete"]?: StartsWithApi<DeleteRoutes>;
     ["hx-patch"]?: StartsWithApi<PatchRoutes>;
     _?: string;
+    preload?: boolean | string;
   }
 }
