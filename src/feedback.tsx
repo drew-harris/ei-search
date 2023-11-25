@@ -1,13 +1,8 @@
 import { html } from "@elysiajs/html";
-import Elysia from "elysia";
+import Elysia, { t } from "elysia";
 import { BaseHtml } from ".";
-import { z } from "zod";
 import { db } from "./db";
 import { feedbackTable } from "./db/schema";
-
-const feedbackSchema = z.object({
-  feedback: z.string().min(1),
-});
 
 export const feedback = new Elysia()
   .use(html())
@@ -44,35 +39,41 @@ export const feedback = new Elysia()
       </BaseHtml>
     );
   })
-  .post("/hx/feedback", async ({ body }) => {
-    try {
-      const { feedback: fb } = feedbackSchema.parse(body);
+  .post(
+    "/hx/feedback",
+    async ({ body }) => {
+      try {
+        await db.insert(feedbackTable).values({
+          content: body.feedback,
+          submittedAt: new Date(),
+        });
 
-      await db.insert(feedbackTable).values({
-        content: fb,
-        submittedAt: new Date(),
-      });
-
-      return (
-        <>
-          <div class="text-center my-2 text-black/80 max-w-[500px] m-auto">
-            Thanks for your feedback!
-          </div>
-          <a href="/" class="mt-4 underline">
-            Back
-          </a>
-        </>
-      );
-    } catch (error) {
-      return (
-        <>
-          <div class="text-center text-red-700 my-2 text-black/80 max-w-[500px] m-auto">
-            There was an error submitting your feedback.
-          </div>
-          <a href="/" class="mt-4 underline">
-            Back
-          </a>
-        </>
-      );
+        return (
+          <>
+            <div class="text-center my-2 text-black/80 max-w-[500px] m-auto">
+              Thanks for your feedback!
+            </div>
+            <a href="/" class="mt-4 underline">
+              Back
+            </a>
+          </>
+        );
+      } catch (error) {
+        return (
+          <>
+            <div class="text-center text-red-700 my-2 text-black/80 max-w-[500px] m-auto">
+              There was an error submitting your feedback.
+            </div>
+            <a href="/" class="mt-4 underline">
+              Back
+            </a>
+          </>
+        );
+      }
+    },
+    {
+      body: t.Object({
+        feedback: t.String(),
+      }),
     }
-  });
+  );

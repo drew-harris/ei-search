@@ -25,7 +25,6 @@
     "@googleapis/youtube": "^10.0.0",
     "drizzle-orm": "^0.27.2",
     "elysia": "^",
-    "mysql2": "^3.5.2",
-    "zod": "^3.22.4"
+    "mysql2": "^3.5.2"
   }
 }
