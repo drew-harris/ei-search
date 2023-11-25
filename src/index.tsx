@@ -6,14 +6,13 @@ import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { db } from "./db";
 import { episode, moment } from "./db/schema";
-import { posthogScript } from "./posthog";
 import { feedback } from "./feedback";
+import { posthogScript } from "./posthog";
 
 const app = new Elysia()
   .use(html())
   .use(feedback)
   .get("/", ({ set }) => {
-    set.headers["Cache-Control"] = "public, max-age=86400";
     return (
       <BaseHtml>
         <body hx-ext="preload" hx-boost="true" class="m-3 relative">
