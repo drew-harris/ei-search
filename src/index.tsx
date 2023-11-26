@@ -8,10 +8,12 @@ import { db } from "./db";
 import { episode, moment } from "./db/schema";
 import { feedback } from "./feedback";
 import { posthogScript } from "./posthog";
+import { proofRoute } from "./proof";
 
 const app = new Elysia()
   .use(html())
   .use(feedback)
+  .use(proofRoute)
   .get("/", ({ set }) => {
     return (
       <BaseHtml>
