@@ -9,6 +9,7 @@ import { config } from "./env";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
+import { error } from "console";
 
 console.log(config.ALGOLIA_APP_ID);
 
@@ -20,9 +21,8 @@ const app = new Elysia()
   .get("/", () => {
     return (
       <BaseHtml>
-        <body hx-ext="preload" hx-boost="true" class="m-3 relative">
+        <body hx-boost="true" class="m-3 relative">
           <a
-            preload="mouseover"
             href="/feedback"
             class="cursor-pointer text-black/50 md:text-black mb-8 hover:underline text-right"
           >
@@ -94,14 +94,17 @@ const app = new Elysia()
           aid: results.queryID,
         };
       });
-
       return (
         <ResultContainer>
           {mappedMoments.map((res) => <Moment moment={res} />).join(" ")}
         </ResultContainer>
       );
     } catch (e) {
-      console.error(e);
+      return (
+        <ResultContainer>
+          <div>There was an error!!</div>
+        </ResultContainer>
+      );
     }
   })
 
@@ -127,8 +130,6 @@ export const BaseHtml = ({ children }: any) => `
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Emergency Intercom Search</title>
   <script src="https://unpkg.com/htmx.org@1.9.3"></script>
-  <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
-  <script src="https://unpkg.com/htmx.org/dist/ext/preload.js"></script>
   <link href="/styles.css" rel="stylesheet">
   ${posthogScript}
 </head>
