@@ -90,6 +90,7 @@ const app = new Elysia()
       const mappedMoments = moments.map((m) => {
         return {
           ...m,
+          content: m._highlightResult?.content?.value || m.content,
           aid: results.queryID,
         };
       });
