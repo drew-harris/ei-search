@@ -15,4 +15,6 @@ export interface AlgoliaMoment {
   episodeId: string;
   content: string;
   timestamp: number;
+  position: number;
+  aid?: string;
 }

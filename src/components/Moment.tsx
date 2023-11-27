@@ -1,5 +1,7 @@
+import { Html } from "@elysiajs/html";
 import { AlgoliaMoment } from "../db/algolia";
 export default function Moment({ moment }: { moment: AlgoliaMoment }) {
+  const vals = `${JSON.stringify({ aid: moment.aid })}`;
   return (
     <div class="text-center border border-black rounded-md bg-white p-2">
       <div class="flex flex-col md:flex-row md:items-start items-center gap-4">
@@ -9,7 +11,8 @@ export default function Moment({ moment }: { moment: AlgoliaMoment }) {
         <div class="w-full">
           <div class="text-xl mb-2 font-bold">{moment.episodeTitle}</div>
           <div>...{moment.content}...</div>
-          <details>
+          <details hx-get="/hx/details" hx-include="this" hx-swap="none">
+            <input type="hidden" name="aid" value={moment.aid} />
             <summary class="my-2 cursor-pointer text-lg">
               View Quote In Video
             </summary>
