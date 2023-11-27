@@ -1,21 +1,23 @@
 import { html } from "@elysiajs/html";
-import { Elysia } from "elysia";
+import Elysia, { t } from "elysia";
+import { analytics } from "./analytics";
 import Header from "./components/Header";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { AlgoliaMoment, momentsIndex } from "./db/algolia";
 import { config } from "./env";
 import { feedback } from "./feedback";
-import { posthogScript } from "./posthog";
+import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
 
 console.log(config.ALGOLIA_APP_ID);
 
 const app = new Elysia()
   .use(html())
+  .use(analytics)
   .use(feedback)
   .use(proofRoute)
-  .get("/", ({ set }) => {
+  .get("/", () => {
     return (
       <BaseHtml>
         <body hx-ext="preload" hx-boost="true" class="m-3 relative">
@@ -33,10 +35,9 @@ const app = new Elysia()
                 name="q"
                 class="py-2 flex-grow outline-none "
                 id="search"
-                _="on htmx:afterRequest call posthog.capture('search', {query: document.getElementById('search').value})"
                 hx-get="/hx/search"
                 hx-swap="outerHTML"
-                hx-trigger="keyup changed delay:500ms, search"
+                hx-trigger="keyup changed delay:700ms, search"
                 hx-target="#results"
                 placeholder="Search your favorite moments here..."
                 hx-indicator=".htmx-indicator"
@@ -54,7 +55,7 @@ const app = new Elysia()
       </BaseHtml>
     );
   })
-  .get("/hx/search", async ({ query }) => {
+  .get("/hx/search", async ({ query, distinct }) => {
     try {
       if (typeof query.q != "string" || !query.q) {
         return <ResultContainer></ResultContainer>;
@@ -66,29 +67,43 @@ const app = new Elysia()
         cacheable: true,
         restrictHighlightAndSnippetArrays: true,
         removeStopWords: false,
+        analytics: true,
+        userToken: distinct,
       });
+
+      if (distinct) {
+        posthog.capture({
+          distinctId: distinct,
+          event: "search",
+          properties: {
+            query: query.q,
+          },
+          timestamp: new Date(),
+        });
+      }
 
       if (results.hits.length === 0) {
         return <ResultContainer>no results :(</ResultContainer>;
       }
 
       let moments = results.hits;
-      moments = moments.map((m) => {
+      const mappedMoments = moments.map((m) => {
         return {
           ...m,
-          content: m._highlightResult?.content?.value || m.content,
+          aid: results.queryID,
         };
       });
 
       return (
         <ResultContainer>
-          {moments.map((res) => <Moment moment={res} />).join(" ")}
+          {mappedMoments.map((res) => <Moment moment={res} />).join(" ")}
         </ResultContainer>
       );
     } catch (e) {
       console.error(e);
     }
   })
+
   .get("/styles.css", ({ set }) => {
     set.headers["Cache-Control"] = "public, max-age=86400";
     return Bun.file("./tailwind-gen/styles.css");

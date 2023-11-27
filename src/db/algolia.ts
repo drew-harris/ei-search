@@ -8,6 +8,8 @@ export const algolia = algoliasearch(
 
 export const momentsIndex = algolia.initIndex("moments");
 
+export const analytics = algolia.initAnalytics();
+
 export interface AlgoliaMoment {
   objectID: string;
   thumbnail: string;
@@ -15,4 +17,6 @@ export interface AlgoliaMoment {
   episodeId: string;
   content: string;
   timestamp: number;
+  position: number;
+  aid?: string;
 }
