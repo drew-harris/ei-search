@@ -8,7 +8,8 @@
     "dev": "concurrently \"bun run --watch src/index.tsx\" \"bun run tw:dev\"",
     "scrape": "bun ./src/scrape.ts",
     "tw": "bunx tailwindcss -m -i ./src/styles.css -o ./tailwind-gen/styles.css",
-    "tw:dev": "bunx tailwindcss -m -i ./src/styles.css -o ./tailwind-gen/styles.css --watch"
+    "tw:dev": "bunx tailwindcss -m -i ./src/styles.css -o ./tailwind-gen/styles.css --watch",
+    "algolia": "bun ./src/scripts/uploadalgolia.ts"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "latest",
@@ -23,8 +24,11 @@
   "dependencies": {
     "@elysiajs/html": "^",
     "@googleapis/youtube": "^10.0.0",
+    "@t3-oss/env-core": "^0.7.1",
+    "algoliasearch": "^4.20.0",
     "drizzle-orm": "^0.27.2",
     "elysia": "^",
-    "mysql2": "^3.5.2"
+    "mysql2": "^3.5.2",
+    "zod": "^3.22.4"
   }
 }

@@ -1,24 +1,14 @@
-import { Episode, Moment } from "../db/schema";
-export default function Moment({
-  moment,
-  episode,
-  query,
-}: {
-  moment: Moment;
-  episode: Episode;
-  query?: string;
-}) {
+import { AlgoliaMoment } from "../db/algolia";
+export default function Moment({ moment }: { moment: AlgoliaMoment }) {
   return (
     <div class="text-center border border-black rounded-md bg-white p-2">
       <div class="flex flex-col md:flex-row md:items-start items-center gap-4">
-        {episode.thumbnail && (
-          <img class="rounded-md md:w-56 w-48" src={episode.thumbnail} />
+        {moment.thumbnail && (
+          <img class="rounded-md md:w-56 w-48" src={moment.thumbnail} />
         )}
         <div class="w-full">
-          <div class="text-xl mb-2 font-bold">{episode.title}</div>
-          <div>
-            <CaptionHighlight content={moment.content} query={query} />
-          </div>
+          <div class="text-xl mb-2 font-bold">{moment.episodeTitle}</div>
+          <div>...{moment.content}...</div>
           <details>
             <summary class="my-2 cursor-pointer text-lg">
               View Quote In Video
@@ -27,7 +17,7 @@ export default function Moment({
               <iframe
                 loading="lazy"
                 class="rounded-md md:w-[560px] md:h-[315px]"
-                src={`https://www.youtube.com/embed/${episode.id}?start=${moment.timestamp}`}
+                src={`https://www.youtube.com/embed/${moment.episodeId}?start=${moment.timestamp}`}
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -39,31 +29,4 @@ export default function Moment({
       </div>
     </div>
   );
-}
-
-interface CaptionHighlightProps {
-  content: string;
-  query?: string;
-}
-
-function CaptionHighlight({ content, query }: CaptionHighlightProps) {
-  if (!query) {
-    return <div>"...{content}..."</div>;
-  }
-  if (!content.toLowerCase().includes(query.toLowerCase())) {
-    return <div>"...{content}..."</div>;
-  } else {
-    return (
-      <div class="content">
-        "...
-        {content
-          .replaceAll(
-            query.toLowerCase(),
-            `<mark>${query.toLowerCase()}</mark>`
-          )
-          .replaceAll(query, `<mark>${query}</mark>`)}
-        ..."
-      </div>
-    );
-  }
 }
