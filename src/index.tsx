@@ -9,8 +9,6 @@ import { config } from "./env";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-import { z } from "zod";
-import { Optional } from "@sinclair/typebox";
 
 console.log(config.ALGOLIA_APP_ID);
 
@@ -39,7 +37,7 @@ const app = new Elysia()
                 id="search"
                 hx-get="/hx/search"
                 hx-swap="outerHTML"
-                hx-trigger="keyup changed delay:500ms, search"
+                hx-trigger="keyup changed delay:700ms, search"
                 hx-target="#results"
                 placeholder="Search your favorite moments here..."
                 hx-indicator=".htmx-indicator"
@@ -70,7 +68,7 @@ const app = new Elysia()
         restrictHighlightAndSnippetArrays: true,
         removeStopWords: false,
         analytics: true,
-        clickAnalytics: true,
+        userToken: distinct,
       });
 
       if (distinct) {
@@ -105,19 +103,6 @@ const app = new Elysia()
       console.error(e);
     }
   })
-
-  .get(
-    "/hx/details",
-    ({ distinct, query }) => {
-      console.log(query);
-      console.log("View details");
-    },
-    {
-      query: t.Object({
-        aid: t.Optional(t.String()),
-      }),
-    }
-  )
 
   .get("/styles.css", ({ set }) => {
     set.headers["Cache-Control"] = "public, max-age=86400";
