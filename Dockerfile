@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Adjust BUN_VERSION as desired
-ARG BUN_VERSION=1.0.0
+ARG BUN_VERSION=1.0.13
 FROM oven/bun:${BUN_VERSION} as base
 
 

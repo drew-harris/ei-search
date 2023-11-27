@@ -60,6 +60,8 @@ const app = new Elysia()
         return <ResultContainer></ResultContainer>;
       }
 
+      console.log("QUERY: ", query.q);
+
       const results = await momentsIndex.search<AlgoliaMoment>(query.q, {
         cacheable: true,
         restrictHighlightAndSnippetArrays: true,
