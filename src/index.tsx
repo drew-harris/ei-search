@@ -1,15 +1,14 @@
 import { html } from "@elysiajs/html";
+import { eq, sql } from "drizzle-orm";
 import { Elysia } from "elysia";
 import Header from "./components/Header";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
-import { AlgoliaMoment, momentsIndex } from "./db/algolia";
-import { config } from "./env";
+import { db } from "./db";
+import { episode, moment } from "./db/schema";
 import { feedback } from "./feedback";
 import { posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-
-console.log(config.ALGOLIA_APP_ID);
 
 const app = new Elysia()
   .use(html())
@@ -60,27 +59,44 @@ const app = new Elysia()
         return <ResultContainer></ResultContainer>;
       }
 
-      const results = await momentsIndex.search<AlgoliaMoment>(query.q, {
-        cacheable: true,
-        restrictHighlightAndSnippetArrays: true,
-        removeStopWords: false,
-      });
+      console.log("QUERY: ", query.q);
 
-      if (results.hits.length === 0) {
+      let result = await db
+        .select()
+        .from(moment)
+        .where(
+          sql`MATCH (content) AGAINST (${query.q} IN NATURAL LANGUAGE MODE)`
+        )
+        .limit(50)
+        .innerJoin(episode, eq(moment.episodeId, episode.id));
+
+      let queryString = query.q;
+      // if content contains query, move it to the front
+      let queryInContent = result.filter((res) =>
+        res.moments.content.toLowerCase().includes(queryString.toLowerCase())
+      );
+      let queryNotInContent = result.filter(
+        (res) =>
+          !res.moments.content.toLowerCase().includes(queryString.toLowerCase())
+      );
+
+      result = [...queryInContent, ...queryNotInContent];
+
+      if (result.length === 0) {
         return <ResultContainer>no results :(</ResultContainer>;
       }
 
-      let moments = results.hits;
-      moments = moments.map((m) => {
-        return {
-          ...m,
-          content: m._highlightResult?.content?.value || m.content,
-        };
-      });
-
       return (
         <ResultContainer>
-          {moments.map((res) => <Moment moment={res} />).join(" ")}
+          {result
+            .map((res) => (
+              <Moment
+                query={query.q as string}
+                moment={res.moments}
+                episode={res.episodes}
+              ></Moment>
+            ))
+            .join(" ")}
         </ResultContainer>
       );
     } catch (e) {
