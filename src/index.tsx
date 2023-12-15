@@ -1,5 +1,5 @@
 import { html } from "@elysiajs/html";
-import Elysia, { t } from "elysia";
+import Elysia from "elysia";
 import { analytics } from "./analytics";
 import Header from "./components/Header";
 import Moment from "./components/Moment";
@@ -9,7 +9,9 @@ import { config } from "./env";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-import { error } from "console";
+import { sentry, setupSentry } from "./sentry";
+
+setupSentry();
 
 console.log(config.ALGOLIA_APP_ID);
 
@@ -100,6 +102,7 @@ const app = new Elysia()
         </ResultContainer>
       );
     } catch (e) {
+      sentry.captureException(e);
       return (
         <ResultContainer>
           <div>There was an error!!</div>
