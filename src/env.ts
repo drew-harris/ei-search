@@ -12,7 +12,12 @@ export const config = createEnv({
   },
 
   runtimeEnv: {
-    ...process.env,
+    ALGOLIA_ADMIN_KEY: process.env.ALGOLIA_ADMIN_KEY,
+    ALGOLIA_APP_ID: process.env.ALGOLIA_APP_ID,
+    DATABASE_URL: process.env.DATABASE_URL,
+    NODE_ENV: process.env.NODE_ENV,
+    POSTHOG_KEY: process.env.POSTHOG_KEY,
+    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
   },
   emptyStringAsUndefined: true,
 });
