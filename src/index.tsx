@@ -9,9 +9,9 @@ import { config } from "./env";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-import { sentry, setupSentry } from "./sentry";
-
-setupSentry();
+import { db } from "./db";
+import { episode, moment } from "./db/schema";
+import { eq, sql } from "drizzle-orm";
 
 console.log(config.ALGOLIA_APP_ID);
 
@@ -69,7 +69,7 @@ const app = new Elysia()
       console.log("QUERY: ", query.q);
 
       const results = await momentsIndex.search<AlgoliaMoment>(query.q, {
-        cacheable: true,
+        cacheable: false,
         restrictHighlightAndSnippetArrays: true,
         removeStopWords: false,
         analytics: true,
@@ -108,7 +108,6 @@ const app = new Elysia()
       );
     } catch (e) {
       console.error(e);
-      sentry.captureException(e);
       return (
         <ResultContainer>
           <div>There was an error!!</div>
