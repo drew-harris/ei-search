@@ -3,7 +3,14 @@ import { config } from "../env";
 
 export const algolia = algoliasearch(
   config.ALGOLIA_APP_ID,
-  config.ALGOLIA_ADMIN_KEY
+  config.ALGOLIA_ADMIN_KEY,
+  {
+    timeouts: {
+      connect: 999,
+      read: 999,
+      write: 999,
+    },
+  }
 );
 
 export const momentsIndex = algolia.initIndex("moments");
