@@ -88,6 +88,8 @@ const app = new Elysia()
         return <ResultContainer>no results :(</ResultContainer>;
       }
 
+      console.log(`GOT RESULTS: ${JSON.stringify(results.hits.length)}`);
+
       let moments = results.hits;
       const mappedMoments = moments.map((m) => {
         return {
