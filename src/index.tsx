@@ -104,6 +104,7 @@ const app = new Elysia()
         </ResultContainer>
       );
     } catch (e) {
+      console.error(e);
       sentry.captureException(e);
       return (
         <ResultContainer>
