@@ -1,10 +1,12 @@
-# fly.toml app configuration file generated for ei-search on 2023-07-26T08:27:50-06:00
+# fly.toml app configuration file generated for ei-search-dawn-brook-2805 on 2023-12-18T22:28:47-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "ei-search"
-primary_region = "sea"
+app = "ei-search-dawn-brook-2805"
+primary_region = "dfw"
+
+[build]
 
 [http_service]
   internal_port = 3000
@@ -13,3 +15,8 @@ primary_region = "sea"
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512

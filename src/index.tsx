@@ -32,9 +32,6 @@ const app = new Elysia()
           </a>
           <Header />
           <div class="flex m-2 flex-col items-center">
-            <div class="font-bold">
-              Site is experiencing issues right now. Sorry.
-            </div>
             <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
               <input
                 name="q"
