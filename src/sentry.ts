@@ -7,8 +7,10 @@ export const setupSentry = () => {
     // Dsn loaded through environment variable
     autoSessionTracking: false,
     enableTracing: false,
+    attachStacktrace: false,
     sendClientReports: false,
-    tracesSampleRate: 1.0,
+    instrumenter: undefined,
+    tracePropagationTargets: [],
     environment: config.NODE_ENV,
   });
 };
