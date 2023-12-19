@@ -8,10 +8,10 @@ import { AlgoliaMoment, momentsIndex } from "./db/algolia";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-import { sentry, setupSentry } from "./sentry";
+// import { sentry, setupSentry } from "./sentry";
 import { config } from "./env";
 
-setupSentry();
+// setupSentry();
 
 console.log(config.ALGOLIA_APP_ID);
 
@@ -105,7 +105,7 @@ const app = new Elysia()
       );
     } catch (e) {
       console.error(e);
-      sentry.captureException(e);
+      // sentry.captureException(e);
       return (
         <ResultContainer>
           <div>There was an error!!</div>
