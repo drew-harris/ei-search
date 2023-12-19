@@ -9,9 +9,9 @@ import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
 import { config } from "./env";
-import { sentry } from "./sentry";
+import { sentry, setupSentry } from "./sentry";
 
-// setupSentry();
+setupSentry();
 
 console.log(config.ALGOLIA_APP_ID);
 

@@ -6,11 +6,17 @@ export const setupSentry = () => {
   Sentry.init({
     // Dsn loaded through environment variable
     autoSessionTracking: false,
+    integrations: [
+      new Sentry.Integrations.Console(),
+      new Sentry.Integrations.BunServer(),
+    ],
+    defaultIntegrations: false,
     enableTracing: false,
     attachStacktrace: false,
     sendClientReports: false,
     instrumenter: undefined,
     tracePropagationTargets: [],
+    debug: true,
     environment: config.NODE_ENV,
   });
 };
