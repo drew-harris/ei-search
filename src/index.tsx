@@ -5,13 +5,12 @@ import Header from "./components/Header";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { AlgoliaMoment, momentsIndex } from "./db/algolia";
-import { config } from "./env";
 import { feedback } from "./feedback";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
 import { sentry, setupSentry } from "./sentry";
 
-// setupSentry();
+setupSentry();
 
 console.log(config.ALGOLIA_APP_ID);
 

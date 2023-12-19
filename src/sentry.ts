@@ -5,6 +5,9 @@ export const setupSentry = () => {
   console.log("Setting up sentry");
   Sentry.init({
     // Dsn loaded through environment variable
+    autoSessionTracking: false,
+    enableTracing: false,
+    sendClientReports: false,
     tracesSampleRate: 1.0,
     environment: config.NODE_ENV,
   });
