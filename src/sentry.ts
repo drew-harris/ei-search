@@ -10,6 +10,7 @@ export const setupSentry = () => {
     attachStacktrace: false,
     sendClientReports: false,
     instrumenter: undefined,
+    enabled: false,
     tracePropagationTargets: [],
     environment: config.NODE_ENV,
   });
