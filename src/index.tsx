@@ -1,14 +1,14 @@
 import { html } from "@elysiajs/html";
 import Elysia from "elysia";
 import { analytics } from "./analytics";
-import Header from "./components/Header";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { AlgoliaMoment, momentsIndex } from "./db/algolia";
+import { config } from "./env";
 import { feedback } from "./feedback";
+import { Homepage } from "./pages/homepage";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
-import { config } from "./env";
 import { sentry, setupSentry } from "./sentry";
 
 setupSentry();
@@ -21,41 +21,7 @@ const app = new Elysia()
   .use(feedback)
   .use(proofRoute)
   .get("/", () => {
-    return (
-      <BaseHtml>
-        <body hx-boost="true" class="m-3 relative">
-          <a
-            href="/feedback"
-            class="cursor-pointer text-black/50 md:text-black mb-8 hover:underline text-right"
-          >
-            Submit Feedback
-          </a>
-          <Header />
-          <div class="flex m-2 flex-col items-center">
-            <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
-              <input
-                name="q"
-                class="py-2 flex-grow outline-none "
-                id="search"
-                hx-get="/hx/search"
-                hx-swap="outerHTML"
-                hx-trigger="keyup changed delay:999ms, search"
-                hx-target="#results"
-                placeholder="Search your favorite moments here..."
-                hx-indicator=".htmx-indicator"
-              ></input>
-              <img
-                src="/spinner"
-                width="18"
-                height="18"
-                class="htmx-indicator"
-              />
-            </div>
-            <ResultContainer />
-          </div>
-        </body>
-      </BaseHtml>
-    );
+    return <Homepage />;
   })
   .get("/hx/search", async ({ query, distinct }) => {
     try {
