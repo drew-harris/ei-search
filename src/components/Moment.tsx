@@ -1,5 +1,6 @@
 import { Html } from "@elysiajs/html";
 import { AlgoliaMoment } from "../db/algolia";
+
 export default function Moment({ moment }: { moment: AlgoliaMoment }) {
   return (
     <div class="text-center border border-black rounded-md bg-white p-2">

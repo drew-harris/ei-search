@@ -18,12 +18,12 @@ export const momentsIndex = algolia.initIndex("moments");
 export const analytics = algolia.initAnalytics();
 
 export interface AlgoliaMoment {
-  objectID: string;
-  thumbnail: string;
+  objectID?: string;
+  thumbnail: string | null;
   episodeTitle: string;
   episodeId: string;
   content: string;
   timestamp: number;
-  position: number;
+  position?: number;
   aid?: string;
 }

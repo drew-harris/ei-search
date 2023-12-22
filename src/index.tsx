@@ -3,12 +3,12 @@ import Elysia from "elysia";
 import { analytics } from "./analytics";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
-import { AlgoliaMoment, momentsIndex } from "./db/algolia";
 import { config } from "./env";
 import { feedback } from "./feedback";
 import { Homepage } from "./pages/homepage";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./proof";
+import { getResults } from "./searching";
 import { sentry, setupSentry } from "./sentry";
 
 setupSentry();
@@ -20,8 +20,8 @@ const app = new Elysia()
   .use(analytics)
   .use(feedback)
   .use(proofRoute)
-  .get("/", () => {
-    return <Homepage />;
+  .get("/", async () => {
+    return await <Homepage />
   })
   .get("/hx/search", async ({ query, distinct }) => {
     try {
@@ -31,13 +31,7 @@ const app = new Elysia()
 
       console.log("QUERY: ", query.q);
 
-      const results = await momentsIndex.search<AlgoliaMoment>(query.q, {
-        cacheable: true,
-        restrictHighlightAndSnippetArrays: true,
-        removeStopWords: false,
-        analytics: true,
-        userToken: distinct,
-      });
+      const result = await getResults(query.q, distinct);
 
       if (distinct) {
         posthog.capture({
@@ -50,23 +44,15 @@ const app = new Elysia()
         });
       }
 
-      if (results.hits.length === 0) {
+      if (result.length === 0) {
         return <ResultContainer>no results :(</ResultContainer>;
       }
 
-      console.log(`GOT RESULTS: ${JSON.stringify(results.hits.length)}`);
+      console.log(`GOT RESULTS: ${JSON.stringify(result.length)}`);
 
-      let moments = results.hits;
-      const mappedMoments = moments.map((m) => {
-        return {
-          ...m,
-          content: m._highlightResult?.content?.value || m.content,
-          aid: results.queryID,
-        };
-      });
       return (
         <ResultContainer>
-          {mappedMoments.map((res) => <Moment moment={res} />).join(" ")}
+          {result.map((res) => <Moment moment={res} />).join(" ")}
         </ResultContainer>
       );
     } catch (e) {
