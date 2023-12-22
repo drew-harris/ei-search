@@ -67,7 +67,6 @@ const app = new Elysia()
   })
 
   .get("/styles.css", ({ set }) => {
-    set.headers["Cache-Control"] = "public, max-age=86400";
     return Bun.file("./tailwind-gen/styles.css");
   })
   .get("/spinner", ({ set }) => {
