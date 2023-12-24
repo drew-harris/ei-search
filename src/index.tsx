@@ -66,7 +66,7 @@ const app = new Elysia()
     }
   })
 
-  .get("/styles.css", ({ set }) => {
+  .get("/styles.css", () => {
     return Bun.file("./tailwind-gen/styles.css");
   })
   .get("/spinner", ({ set }) => {
