@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { algolia, momentsIndex } from "../db/algolia";
+import { momentsIndex } from "../db/algolia";
 import { episode, moment } from "../db/schema";
 
 let moments = await db
