@@ -15,7 +15,7 @@ export default async function Header() {
       </div>
       {!flag && (
         <div class="text-center p-2 bg-red-200 w-fit m-auto rounded border-black border">
-          Note: Search performance has been temporarily limited until Dec. 26
+          Note: Search performance has been temporarily limited
         </div>
       )}
     </div>
