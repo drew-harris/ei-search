@@ -1,7 +1,6 @@
-import { posthog } from "../posthog";
-
 export default async function Header() {
-  const flag = await posthog.getFeatureFlag("use-algolia", "default");
+  // const flag = await posthog.getFeatureFlag("use-algolia", "default");
+  const flag = true;
   return (
     <div>
       <div class="text-center mt-5 md:text-3xl text-xl font-bold">

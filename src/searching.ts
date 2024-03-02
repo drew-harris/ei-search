@@ -6,9 +6,10 @@ import { db } from "./db";
 
 export const getResults = async (
   query: string,
-  distinctId = "default"
+  distinctId = "default",
 ): Promise<AlgoliaMoment[]> => {
-  const flag = await posthog.getFeatureFlag("use-algolia", distinctId);
+  // const flag = await posthog.getFeatureFlag("use-algolia", distinctId);
+  const flag = true;
 
   if (flag) {
     const results = await momentsIndex.search<AlgoliaMoment>(query, {

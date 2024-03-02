@@ -4,12 +4,13 @@ import { analytics } from "./analytics";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
 import { config } from "./env";
-import { feedback } from "./feedback";
+import { feedback } from "./pages/feedback";
 import { Homepage } from "./pages/homepage";
 import { posthog, posthogScript } from "./posthog";
-import { proofRoute } from "./proof";
+import { proofRoute } from "./pages/proof";
 import { getResults } from "./searching";
 import { sentry, setupSentry } from "./sentry";
+import { tracing } from "./tracing";
 
 setupSentry();
 
@@ -20,8 +21,9 @@ const app = new Elysia()
   .use(analytics)
   .use(feedback)
   .use(proofRoute)
+  .use(tracing)
   .get("/", async () => {
-    return await <Homepage />
+    return await (<Homepage />);
   })
   .get("/hx/search", async ({ query, distinct }) => {
     try {
@@ -76,7 +78,7 @@ const app = new Elysia()
   .listen(3000);
 
 console.log(
-  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
 );
 
 export const BaseHtml = ({ children }: any) => `

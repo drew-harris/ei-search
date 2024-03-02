@@ -77,5 +77,5 @@ export const feedback = new Elysia()
       body: t.Object({
         feedback: t.String(),
       }),
-    }
+    },
   );
