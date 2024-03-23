@@ -1,9 +1,9 @@
 import { html } from "@elysiajs/html";
 import Elysia, { t } from "elysia";
-import { BaseHtml } from "..";
-import { db } from "../db";
-import { feedbackTable } from "../db/schema";
-import { sentry } from "../sentry";
+import { BaseHtml } from ".";
+import { db } from "./db";
+import { feedbackTable } from "./db/schema";
+import { sentry } from "./sentry";
 
 export const feedback = new Elysia()
   .use(html())
@@ -77,5 +77,5 @@ export const feedback = new Elysia()
       body: t.Object({
         feedback: t.String(),
       }),
-    }
+    },
   );

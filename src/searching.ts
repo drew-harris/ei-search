@@ -1,7 +1,6 @@
 import { eq, sql } from "drizzle-orm";
 import { AlgoliaMoment, momentsIndex } from "./db/algolia";
 import { episode, moment } from "./db/schema";
-import { posthog } from "./posthog";
 import { db } from "./db";
 
 export const getResults = async (
