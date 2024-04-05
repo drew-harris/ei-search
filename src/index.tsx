@@ -91,6 +91,12 @@ export const BaseHtml = ({ children }: any) => `
   <script src="https://unpkg.com/htmx.org@1.9.3"></script>
   <link href="/styles.css" rel="stylesheet">
   ${posthogScript}
+  <style>
+    .htmx-indicator {
+        opacity: 0;
+        transition: opacity 200ms ease-in;
+    }
+    </style>
 </head>
 
 ${children}
