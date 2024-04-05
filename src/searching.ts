@@ -17,6 +17,8 @@ export const getResults = async (
       removeStopWords: false,
       analytics: true,
       userToken: distinctId,
+      length: 80,
+      offset: 0,
     });
 
     let moments = results.hits;
