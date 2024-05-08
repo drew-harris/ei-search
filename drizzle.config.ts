@@ -2,9 +2,9 @@ import type { Config } from "drizzle-kit";
 
 export default {
   schema: "./src/db/schema.ts",
-  driver: "mysql2",
+  driver: "pg",
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL!
+    connectionString: process.env.DATABASE_URL!,
   },
   verbose: true,
   strict: true,

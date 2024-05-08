@@ -18,10 +18,10 @@ console.log(config.ALGOLIA_APP_ID);
 
 const app = new Elysia()
   .use(html())
+  .use(tracing)
   .use(analytics)
   .use(feedback)
   .use(proofRoute)
-  .use(tracing)
   .get("/", async () => {
     return await (<Homepage />);
   })

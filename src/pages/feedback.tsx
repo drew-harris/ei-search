@@ -4,6 +4,7 @@ import { BaseHtml } from "..";
 import { db } from "../db";
 import { feedbackTable } from "../db/schema";
 import { sentry } from "../sentry";
+import { nanoid } from "nanoid";
 
 export const feedback = new Elysia()
   .use(html())
@@ -45,6 +46,7 @@ export const feedback = new Elysia()
     async ({ body }) => {
       try {
         await db.insert(feedbackTable).values({
+          id: nanoid(5),
           content: body.feedback,
           submittedAt: new Date(),
         });

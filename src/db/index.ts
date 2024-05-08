@@ -1,10 +1,10 @@
-import { drizzle } from "drizzle-orm/mysql2";
 import * as schema from "./schema";
-import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/postgres-js";
+
 import { config } from "../env";
+import { Pool } from "pg";
+import postgres from "postgres";
 
-const client = mysql.createPool({
-  uri: config.DATABASE_URL,
-});
+const queryClient = postgres(config.DATABASE_URL);
 
-export const db = drizzle(client, { schema, logger: false });
+export const db = drizzle(queryClient, { schema, logger: false });
