@@ -11,6 +11,12 @@ export default async function Header() {
         <br />
         "View Quote In Video" will open the episode and jump to the moment
         shown.
+        <div class="mt-2">
+          Update: Recent episodes have been added and the site will stay
+          updated!!
+          <br />
+          BIG THINGS COMING SOON!!
+        </div>
       </div>
       {!flag && (
         <div class="text-center p-2 bg-red-200 w-fit m-auto rounded border-black border">

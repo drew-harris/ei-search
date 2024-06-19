@@ -10,7 +10,7 @@ export const algolia = algoliasearch(
       read: 999,
       write: 999,
     },
-  }
+  },
 );
 
 export const momentsIndex = algolia.initIndex("moments");
@@ -26,4 +26,14 @@ export interface AlgoliaMoment {
   timestamp: number;
   position?: number;
   aid?: string;
+}
+
+export interface TypesenseMoment {
+  id: string;
+  playlistId: string;
+  content: string;
+  start: number;
+  videoId: string;
+  thumbnailUrl: string;
+  videoTitle: string;
 }
