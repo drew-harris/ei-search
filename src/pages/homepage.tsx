@@ -21,7 +21,7 @@ export const Homepage = async () => {
               id="search"
               hx-get="/hx/search"
               hx-swap="outerHTML"
-              hx-trigger="keyup changed delay:900ms, search"
+              hx-trigger="keyup changed delay:300ms, search"
               hx-target="#results"
               placeholder="Search your favorite moments here..."
               hx-indicator=".htmx-indicator"
