@@ -1,5 +1,5 @@
 import { Html } from "@elysiajs/html";
-import { AlgoliaMoment, TypesenseMoment } from "../db/algolia";
+import { TypesenseMoment } from "../db/algolia";
 
 export default function Moment({ moment }: { moment: TypesenseMoment }) {
   return (
@@ -19,7 +19,7 @@ export default function Moment({ moment }: { moment: TypesenseMoment }) {
               <iframe
                 loading="lazy"
                 class="rounded-md md:w-[560px] md:h-[315px]"
-                src={`https://www.youtube.com/embed/${moment.videoId}?start=${moment.start}`}
+                src={`https://www.youtube.com/embed/${moment.youtubeVideoId}?start=${moment.start}`}
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

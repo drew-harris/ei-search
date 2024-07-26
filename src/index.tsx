@@ -75,7 +75,7 @@ const app = new Elysia()
     set.headers["Cache-Control"] = "public, max-age=86400";
     return Bun.file("./90-ring.svg");
   })
-  .listen(3000);
+  .listen(3001);
 
 console.log(
   `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,

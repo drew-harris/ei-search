@@ -1,4 +1,4 @@
-import { AlgoliaMoment, TypesenseMoment, momentsIndex } from "./db/algolia";
+import { TypesenseMoment } from "./db/algolia";
 
 export const getResults = async (
   query: string,

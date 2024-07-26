@@ -28,12 +28,12 @@ export interface AlgoliaMoment {
   aid?: string;
 }
 
-export interface TypesenseMoment {
+export type TypesenseMoment = {
   id: string;
-  playlistId: string;
   content: string;
   start: number;
   videoId: string;
-  thumbnailUrl: string;
+  youtubeVideoId: string;
   videoTitle: string;
-}
+  thumbnailUrl: string;
+};
