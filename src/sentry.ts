@@ -1,8 +1,9 @@
 import * as Sentry from "@sentry/bun";
 import { config } from "./env";
+import { logger } from "./logs";
 
 export const setupSentry = () => {
-  console.log("Setting up sentry");
+  logger.info("setting up sentry");
   Sentry.init({
     // Dsn loaded through environment variable
     autoSessionTracking: false,
@@ -16,7 +17,6 @@ export const setupSentry = () => {
     sendClientReports: false,
     instrumenter: undefined,
     tracePropagationTargets: [],
-    debug: true,
     environment: config.NODE_ENV,
   });
 };

@@ -11,10 +11,9 @@ import { proofRoute } from "./pages/proof";
 import { getResults } from "./searching";
 import { sentry, setupSentry } from "./sentry";
 import { tracing } from "./tracing";
+import { logger } from "./logs";
 
 setupSentry();
-
-console.log(config.ALGOLIA_APP_ID);
 
 const app = new Elysia()
   .use(html())
@@ -31,8 +30,6 @@ const app = new Elysia()
         return <ResultContainer></ResultContainer>;
       }
 
-      console.log("QUERY: ", query.q);
-
       const result = await getResults(query.q, distinct);
 
       if (distinct) {
@@ -46,11 +43,11 @@ const app = new Elysia()
         });
       }
 
+      logger.info({ query: query.q, resultCount: result.length }, "search");
+
       if (result.length === 0) {
         return <ResultContainer>no results :(</ResultContainer>;
       }
-
-      console.log(`GOT RESULTS: ${JSON.stringify(result.length)}`);
 
       return (
         <ResultContainer>
@@ -77,9 +74,7 @@ const app = new Elysia()
   })
   .listen(3000);
 
-console.log(
-  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
-);
+logger.info({ app: app.server?.hostname, port: app.server?.port }, "start");
 
 export const BaseHtml = ({ children }: any) => `
 <!DOCTYPE html>

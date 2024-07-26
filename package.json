@@ -5,7 +5,7 @@
   "scripts": {
     "db:push": "bunx drizzle-kit push:pg",
     "db:studio": "bunx drizzle-kit studio",
-    "dev": "concurrently \"bun run --watch src/index.tsx\" \"bun run tw:dev\"",
+    "dev": "concurrently \"bun run --watch src/index.tsx | pino-pretty\" \"bun run tw:dev\"",
     "scrape": "bun ./src/scrape.ts",
     "tw": "bunx tailwindcss -m -i ./src/styles.css -o ./tailwind-gen/styles.css",
     "tw:dev": "bunx tailwindcss -m -i ./src/styles.css -o ./tailwind-gen/styles.css --watch",
@@ -32,6 +32,9 @@
     "elysia": "^",
     "nanoid": "^5.0.7",
     "pg": "^8.11.5",
+    "pino": "^9.3.2",
+    "pino-loki": "^2.3.0",
+    "pino-pretty": "^11.2.2",
     "postgres": "^3.4.4",
     "posthog-node": "^3.1.3",
     "zod": "^3.22.4"
