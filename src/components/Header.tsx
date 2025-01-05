@@ -17,6 +17,14 @@ export default async function Header() {
           Note: Search performance has been temporarily limited
         </div>
       )}
+      <div class="text-center py-2">
+        NEW:{"  "}
+        <a class="underline" href="https://captioncrawler.com">
+          {" "}
+          Caption Crawler{" "}
+        </a>
+        lets you search any playlist you want!!
+      </div>
     </div>
   );
 }
