@@ -23,7 +23,7 @@ export default async function Header() {
           {" "}
           Caption Crawler{" "}
         </a>
-        lets you search any playlist you want!!
+        lets you search any YouTube playlist/podcast you want!!
       </div>
     </div>
   );
