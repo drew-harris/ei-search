@@ -7,3 +7,8 @@ export const posthogScript = `<script defer>
   </script>`;
 
 export const posthog = new PostHog(config.POSTHOG_KEY);
+
+export const plausibleScript = `
+<script defer data-domain="drewh.cloud" src="https://analytics.drewh.cloud/js/script.file-downloads.hash.outbound-links.pageview-props.tagged-events.js"></script>
+<script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+`;
