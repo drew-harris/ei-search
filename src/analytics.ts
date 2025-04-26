@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { sentry } from "./sentry";
+import { sendError } from "./handleError";
 
 export const analytics = new Elysia().derive((ctx) => {
   try {
@@ -21,8 +21,7 @@ export const analytics = new Elysia().derive((ctx) => {
       distinct: header.get().distinct_id as string,
     };
   } catch (error) {
-    console.error(error);
-    sentry.captureException(error);
+    sendError(error);
     return {
       distinct: undefined,
     };

@@ -3,20 +3,30 @@ import Elysia from "elysia";
 import { analytics } from "./analytics";
 import Moment from "./components/Moment";
 import { ResultContainer } from "./components/ResultContainer";
-import { config } from "./env";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { feedback } from "./pages/feedback";
 import { Homepage } from "./pages/homepage";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./pages/proof";
 import { getResults } from "./searching";
-import { sentry, setupSentry } from "./sentry";
 import { tracing } from "./tracing";
 import { logger } from "./logs";
+import { db } from "./db";
+import { ingestRoute, typesense } from "./ingest";
+import { sendError } from "./handleError";
+import cron from "@elysiajs/cron";
 
-setupSentry();
+if (!process.env.DISCORD_ERROR_WEBHOOK) {
+  logger.warn("No discord error webhook");
+}
 
 const app = new Elysia()
   .use(html())
+  .onError((e) => {
+    sendError(e.error);
+  })
+  .use(ingestRoute)
+  .decorate("typesense", typesense)
   .use(tracing)
   .use(analytics)
   .use(feedback)
@@ -56,7 +66,6 @@ const app = new Elysia()
       );
     } catch (e) {
       console.error(e);
-      sentry.captureException(e);
       return (
         <ResultContainer>
           <div>There was an error!!</div>
@@ -98,3 +107,7 @@ ${children}
 `;
 
 export type App = typeof app;
+
+migrate(db, {
+  migrationsFolder: "./migrations",
+});

@@ -1,10 +1,14 @@
 import { youtube_v3 } from "@googleapis/youtube";
-import { base64Encode } from "./utils";
+import { getReqBody } from "./ctrlDoNotTouch";
 
-export async function getVideosFromPlaylist(url: string) {
+export function base64Encode(str: string) {
+  return Buffer.from(str, "utf-8").toString("base64");
+}
+
+export async function getVideosFromYoutube(
+  playlistId: string,
+): Promise<youtube_v3.Schema$PlaylistItem[]> {
   // Get the playlist id
-  const playlistUrl = new URLSearchParams(url.split("?")[1]);
-  const playlistId = playlistUrl.get("list");
   if (!playlistId) {
     throw new Error("Could not get playlist id from url");
   }
@@ -22,7 +26,6 @@ export async function getVideosFromPlaylist(url: string) {
     nextPageToken = res.nextPageToken;
   }
 
-  console.log(items.length + " items" + " " + res.itemTotal);
   return items;
 }
 
@@ -49,11 +52,10 @@ async function getItemsForPlaylist(playlistId: string, nextPageToken?: string) {
       headers: {
         Accept: "application/json",
       },
-    }
+    },
   );
 
   if (!response.ok) {
-    console.log(await response.text());
     throw new Error("Got bad response from youtube api");
   }
 
@@ -68,21 +70,20 @@ async function getItemsForPlaylist(playlistId: string, nextPageToken?: string) {
 }
 
 export async function getWordsFromVideoId(id: string) {
-  const start = "\n\v" + id;
+  const reqBodyToEncode = getReqBody(id);
 
   const response = await fetch(
-    "https://www.youtube.com/youtubei/v1/get_transcript?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+    "https://www.youtube.com/youtubei/v1/get_transcript?prettyPrint=false",
     {
-      method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "content-type": "application/json",
       },
-
+      method: "POST",
       body: JSON.stringify({
         context: { client: { clientName: "WEB", clientVersion: "2.9999099" } },
-        params: base64Encode(start),
+        params: encodeURIComponent(base64Encode(reqBodyToEncode)),
       }),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -90,28 +91,46 @@ export async function getWordsFromVideoId(id: string) {
   }
 
   const data = (await response.json()) as any;
-  // console.log(data);
 
   const cues: any[] =
-    data?.actions[0]?.updateEngagementPanelAction?.content?.transcriptRenderer
-      ?.body.transcriptBodyRenderer.cueGroups;
-
-  if (!cues) {
-    throw new Error("Could not get cues");
-  }
+    data?.actions[0].updateEngagementPanelAction.content.transcriptRenderer
+      .content.transcriptSearchPanelRenderer.body.transcriptSegmentListRenderer
+      .initialSegments;
 
   const words = cues.map((cue) => {
-    const interm = cue.transcriptCueGroupRenderer.cues[0].transcriptCueRenderer;
+    const interm = cue.transcriptSegmentRenderer;
+    if (!interm) {
+      throw new Error("No transcriptSegmentRenderer");
+    }
+    if (!interm?.snippet?.runs[0]) {
+      throw new Error("No text");
+    }
     return {
-      words: interm.cue.simpleText as string,
-      start: interm.startOffsetMs as number,
+      words: interm.snippet.runs[0].text as string,
+      start: interm.startMs as number,
     };
   });
 
+  if (!words || words.length === 0) {
+    throw new Error("No words found");
+  }
+
+  //
   return words.filter((w) => w.words != "[Music]");
 }
 
-export function getVideoIdFromUrl(url: string): string {
-  const params = new URLSearchParams(url.split("?")[1]);
-  return params.get("v")!;
+export function collapseWords(
+  words: Awaited<ReturnType<typeof getWordsFromVideoId>>,
+  factor: number,
+) {
+  const res: typeof words = [];
+  for (let i = 0; i < words.length; i += factor) {
+    const start = words[i].start;
+    const text = words
+      .slice(i, i + factor)
+      .map((w) => w.words)
+      .join(" ");
+    res.push({ start, words: text });
+  }
+  return res;
 }

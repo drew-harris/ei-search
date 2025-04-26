@@ -3,7 +3,6 @@ import Elysia, { t } from "elysia";
 import { BaseHtml } from "..";
 import { db } from "../db";
 import { feedbackTable } from "../db/schema";
-import { sentry } from "../sentry";
 import { nanoid } from "nanoid";
 
 export const feedback = new Elysia()
@@ -62,7 +61,6 @@ export const feedback = new Elysia()
           </>
         );
       } catch (error) {
-        sentry.captureException(error);
         return (
           <>
             <div class="text-center text-red-700 my-2 text-black/80 max-w-[500px] m-auto">

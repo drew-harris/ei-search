@@ -8,4 +8,5 @@ export default {
   },
   verbose: true,
   strict: true,
+  out: "./migrations",
 } satisfies Config;
