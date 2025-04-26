@@ -6,7 +6,7 @@ import { ResultContainer } from "./components/ResultContainer";
 import { config } from "./env";
 import { feedback } from "./pages/feedback";
 import { Homepage } from "./pages/homepage";
-import { plausibleScript, posthog, posthogScript } from "./posthog";
+import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./pages/proof";
 import { getResults } from "./searching";
 import { sentry, setupSentry } from "./sentry";
@@ -86,7 +86,6 @@ export const BaseHtml = ({ children }: any) => `
   <script src="https://unpkg.com/htmx.org@1.9.3"></script>
   <link href="/styles.css" rel="stylesheet">
   ${posthogScript}
-  ${plausibleScript}
   <style>
     .htmx-indicator {
         opacity: 0;
