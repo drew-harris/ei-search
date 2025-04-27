@@ -1,6 +1,19 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
 services:
+  server:
+    profiles: !reset []
+    networks:
+      - caddy
+      - default
+    ports: !reset []
+    restart: always
   typesense:
     ports: !reset []
+    restart: always
   postgres:
     ports: !reset []
+    restart: always
+
+networks:
+  caddy:
+    external: true
