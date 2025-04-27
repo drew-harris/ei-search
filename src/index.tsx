@@ -23,6 +23,9 @@ if (!process.env.DISCORD_ERROR_WEBHOOK) {
 const app = new Elysia()
   .use(html())
   .onError((e) => {
+    if (e.error.message === "NOT_FOUND") {
+      return;
+    }
     sendError(e.error);
   })
   .use(ingestRoute)
