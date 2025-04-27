@@ -10,7 +10,10 @@ services:
     restart: always
     environment:
       - DATABASE_URL=postgres://postgres:example@ei-search-postgres:5432/postgres
+      - TYPESENSE_API_KEY=cvcvbyrrqhwpatfdjlcf
+      - TYPESENSE_HOST=ei-search-typesense
   typesense:
+    container_name: ei-search-typesense
     ports: !reset []
     restart: always
     networks:
