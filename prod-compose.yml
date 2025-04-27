@@ -8,12 +8,19 @@ services:
       - default
     ports: !reset []
     restart: always
+    environment:
+      - DATABASE_URL=postgres://postgres:example@ei-search-postgres:5432/postgres
   typesense:
     ports: !reset []
     restart: always
+    networks:
+      - default
   postgres:
+    container_name: ei-search-postgres
     ports: !reset []
     restart: always
+    networks:
+      - default
 
 networks:
   caddy:
