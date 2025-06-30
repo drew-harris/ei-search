@@ -22,6 +22,29 @@ export class TypesenseError extends Error {
   }
 }
 
+export class YouTubeError extends Error {
+  public errType = "youtube" as const;
+  constructor(...args: ConstructorParameters<typeof Error>) {
+    super(...args);
+  }
+}
+
+export class VideoProcessingError extends Error {
+  public errType = "video_processing" as const;
+  constructor(...args: ConstructorParameters<typeof Error>) {
+    super(...args);
+  }
+}
+
+export class DatabaseError extends Error {
+  public errType = "database" as const;
+  constructor(...args: ConstructorParameters<typeof Error>) {
+    super(...args);
+  }
+}
+
+export type IngestError = TypesenseError | YouTubeError | VideoProcessingError | DatabaseError;
+
 export const useTypesense = <T>(
   fn: (ts: TSClient) => Promise<T>,
 ): ResultAsync<T, TypesenseError> => {
@@ -33,5 +56,9 @@ export const useTypesense = <T>(
 };
 
 export const ingestRoute = new Elysia().post("/ingest", async (c) => {
-  doEiIngest();
+  const result = await doEiIngest();
+  return result.match(
+    (message) => ({ success: true, message }),
+    (error) => ({ success: false, error: error.message })
+  );
 });
