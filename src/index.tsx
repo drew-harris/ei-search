@@ -8,13 +8,13 @@ import { feedback } from "./pages/feedback";
 import { Homepage } from "./pages/homepage";
 import { posthog, posthogScript } from "./posthog";
 import { proofRoute } from "./pages/proof";
-import { getResults } from "./searching";
 import { tracing } from "./tracing";
 import { logger } from "./logs";
 import { db } from "./db";
 import { ingestRoute, typesense } from "./ingest";
 import { sendError } from "./handleError";
-import cron from "@elysiajs/cron";
+import { Search } from "./lib/search";
+import { log } from "./lib/logging";
 
 if (!process.env.DISCORD_ERROR_WEBHOOK) {
   logger.warn("No discord error webhook");
@@ -29,52 +29,48 @@ const app = new Elysia()
     sendError(e.error);
   })
   .use(ingestRoute)
-  .decorate("typesense", typesense)
   .use(tracing)
   .use(analytics)
   .use(feedback)
   .use(proofRoute)
   .get("/", async () => {
-    return await (<Homepage />);
+    return <Homepage />;
   })
   .get("/hx/search", async ({ query, distinct }) => {
-    try {
-      if (typeof query.q != "string" || !query.q) {
-        return <ResultContainer></ResultContainer>;
-      }
-
-      const result = await getResults(query.q, distinct);
-
-      if (distinct) {
-        posthog.capture({
-          distinctId: distinct,
-          event: "search",
-          properties: {
-            query: query.q,
-          },
-          timestamp: new Date(),
-        });
-      }
-
-      logger.info({ query: query.q, resultCount: result.length }, "search");
-
-      if (result.length === 0) {
-        return <ResultContainer>no results :(</ResultContainer>;
-      }
-
-      return (
-        <ResultContainer>
-          {result.map((res) => <Moment moment={res} />).join(" ")}
-        </ResultContainer>
-      );
-    } catch (e) {
-      console.error(e);
-      return (
-        <ResultContainer>
-          <div>There was an error!!</div>
-        </ResultContainer>
-      );
+    if (typeof query.q != "string" || !query.q) {
+      return <ResultContainer></ResultContainer>;
     }
+
+    const result = await Search.getSearchResults(query.q);
+
+    if (distinct) {
+      posthog.capture({
+        distinctId: distinct,
+        event: "search",
+        properties: {
+          query: query.q,
+        },
+        timestamp: new Date(),
+      });
+    }
+
+    return result.match(
+      (result) => {
+        return (
+          <ResultContainer>
+            {result.map((res) => <Moment moment={res} />).join(" ")}
+          </ResultContainer>
+        );
+      },
+      (e) => {
+        log.error(e);
+        return (
+          <ResultContainer>
+            <div>There was an error!!</div>
+          </ResultContainer>
+        );
+      },
+    );
   })
 
   .get("/styles.css", () => {

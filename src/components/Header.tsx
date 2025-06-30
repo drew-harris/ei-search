@@ -1,4 +1,4 @@
-export default async function Header() {
+export default function Header() {
   // const flag = await posthog.getFeatureFlag("use-algolia", "default");
   const flag = true;
   return (

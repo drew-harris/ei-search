@@ -2,7 +2,7 @@ import { BaseHtml } from "..";
 import Header from "../components/Header";
 import { ResultContainer } from "../components/ResultContainer";
 
-export const Homepage = async () => {
+export const Homepage = () => {
   return (
     <BaseHtml>
       <body hx-boost="true" class="m-3 relative">
@@ -12,7 +12,7 @@ export const Homepage = async () => {
         >
           Submit Feedback
         </a>
-        {await Header()}
+        <Header />
         <div class="flex m-2 flex-col items-center">
           <div class="flex bg-white px-3 w-full border border-black mt-5 md:w-[300px] rounded-md">
             <input
