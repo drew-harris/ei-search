@@ -3,6 +3,7 @@ import { env } from "./env";
 import Elysia from "elysia";
 import { doEiIngest } from "./handlePlaylistIngest";
 import { ResultAsync, fromPromise } from "neverthrow";
+import { ProjectError, ProjectErrorArgs } from "../handleError";
 
 export const typesense = new TSClient({
   nodes: [
@@ -15,10 +16,10 @@ export const typesense = new TSClient({
   apiKey: env.TYPESENSE_API_KEY,
 });
 
-export class TypesenseError extends Error {
+export class TypesenseError extends ProjectError<"Typesense"> {
   public errType = "typesense" as const;
-  constructor(...args: ConstructorParameters<typeof Error>) {
-    super(...args);
+  constructor(args: ProjectErrorArgs<"Typesense">) {
+    super({ ...args, report: true });
   }
 }
 
@@ -43,14 +44,22 @@ export class DatabaseError extends Error {
   }
 }
 
-export type IngestError = TypesenseError | YouTubeError | VideoProcessingError | DatabaseError;
+export type IngestError =
+  | TypesenseError
+  | YouTubeError
+  | VideoProcessingError
+  | DatabaseError;
 
 export const useTypesense = <T>(
   fn: (ts: TSClient) => Promise<T>,
 ): ResultAsync<T, TypesenseError> => {
   const result = fromPromise(
     fn(typesense),
-    (e) => new TypesenseError("Typesense Error", { cause: e }),
+    (e) =>
+      new TypesenseError({
+        message: "Failed to use typesense",
+        cause: e,
+      }),
   );
   return result;
 };
@@ -59,6 +68,6 @@ export const ingestRoute = new Elysia().post("/ingest", async (c) => {
   const result = await doEiIngest();
   return result.match(
     (message) => ({ success: true, message }),
-    (error) => ({ success: false, error: error.message })
+    (error) => ({ success: false, error: error.message }),
   );
 });

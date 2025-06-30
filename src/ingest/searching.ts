@@ -21,6 +21,9 @@ export const createIndexIfNotExist = (
       }
     })(),
     (e) =>
-      new TypesenseError("Failed to create or retrieve index", { cause: e }),
+      new TypesenseError({
+        message: "Failed to create or retrieve index",
+        cause: e,
+      }),
   );
 };
